@@ -1,0 +1,67 @@
+{
+"test_suites":[
+    {
+      "suite_name":"hvac_mode",
+      "results": [
+        {
+          "test_name": "test_eco_2621",
+          "time": "8.556",
+          "status": "pass"
+        }, {
+          "test_name": "test_eco_1725",
+          "time": "45.909",
+          "status": "pass"
+        }, {
+          "test_name": " test_eco_2645",
+          "time": "9.383",
+          "status": "fail"
+        }, {
+          "test_name": "test_eco_2623",
+          "time": "6.719",
+          "status": "pass"
+        }, {
+          "test_name": "test_eco_2624",
+          "time": "",
+          "status": "blocked"
+        }, {
+          "test_name": "test_eco_2625",
+          "time": "8.017",
+          "status": "pass"
+        }, {
+          "test_name": "test_eco_2626",
+          "time": "8.774",
+          "status": "pass"
+        }, {
+          "test_name": "test_eco_2641",
+          "time": "",
+          "status": "blocked"
+        }, {
+          "test_name": "test_eco_2622",
+          "time": "4.967",
+          "status": "pass"
+        }, {
+          "test_name": "test_eco_2782",
+          "time": "12.690",
+          "status": "fail"
+        }, {
+          "test_name": "test_eco_2633",
+          "time": "70.902",
+          "status": "fail"
+        }
+      ]
+    }, {
+      "suite_name":"temp_setting",
+      "results": [
+        {
+          "test_name": "test_eco_2915",
+          "time": "5.890",
+          "status": "fail"
+        }, {
+          "test_name": "test_eco_2913",
+          "time": "10.000",
+          "status": "fail"
+        }
+      ]
+    }
+  ]
+}
