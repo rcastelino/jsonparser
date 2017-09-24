@@ -33,13 +33,13 @@ public class PrintTestResults {
         printAllTestSuiteNames();
 
         //Print out the total number of tests that passed and their details
-        printAllPassTestDetails();
+        printAllTestDetails(JsonReader.Result.PASS);
 
         //Print out the total number of tests that failed and their details
-        printAllFailTestDetails();
+        printAllTestDetails(JsonReader.Result.FAIL);
 
         //Print out the total number of tests that are blocked and their details
-        printAllBlockedTestDetails();
+        printAllTestDetails(JsonReader.Result.BLOCKED);
 
         //Print out the total number of test that took more than 10 seconds to execute
         printAllTestsGreaterThanDuration(10.0);
@@ -65,96 +65,39 @@ public class PrintTestResults {
     }
 
     /**
-     * Prints Pass Test details (test name and duration)
+     * Prints list of tests and time duration based on results in alphabetical order
+     * @param result - Enum for pass, fail, blocked tests
      * @throws Exception
      */
-    private static void printAllPassTestDetails() throws Exception {
-        HashMap<String, List<JSONObject>> passTests = JsonReader.getAllTestsPassed();
+    private static void printAllTestDetails(JsonReader.Result result) throws Exception {
+        HashMap<String, List<JSONObject>> testResults = JsonReader.getAllTests(result);
 
         String testName;
         String testExecutionTime;
 
         //Check if any suite with pass tests available
-        if (!passTests.keySet().isEmpty()) {
-            Logger.logOutput("PASS List --> Total number of tests that passed and their details");
+        if (!testResults.keySet().isEmpty()) {
+            Logger.logOutput(String.format("%s List --> Total number of tests that %s and their details", result.toString().toUpperCase(), result.toString()));
 
             //for each suite
-            for (String suite : passTests.keySet()) {
+            for (String suite : testResults.keySet()) {
                 Logger.logAction("Test Suite --> " + suite);
 
                 //get pass results and time duration
-                for (int i = 0; i < passTests.get(suite).size(); i++) {
-                    testName = passTests.get(suite).get(i).get("test_name").toString();
-                    testExecutionTime = passTests.get(suite).get(i).get("time").toString();
+                for (int i = 0; i < testResults.get(suite).size(); i++) {
+                    testName = testResults.get(suite).get(i).get("test_name").toString();
+                    testExecutionTime = testResults.get(suite).get(i).get("time").toString();
                     Logger.logAction(String.format("%d) %s      -        %s", i+1, testName, testExecutionTime));
                 }
             }
-        } else {
-            Logger.logWarning(String.format("There are no PASS tests in json file %s", JsonReader.getTestSuiteFilename()));
-        }
-    }
-
-
-    /**
-     * Prints Fail Test details (test name and duration)
-     * @throws Exception
-     */
-    private static void printAllFailTestDetails() throws Exception {
-        HashMap<String, List<JSONObject>> failTests = JsonReader.getAllTestsFailed();
-
-        String testName;
-        String testExecutionTime;
-
-        //Check if any suite with failed tests available
-        if (!failTests.keySet().isEmpty()) {
-            Logger.logOutput("FAIL List --> Total number of tests that failed and their details");
-
-            //for each suite
-            for (String suite : failTests.keySet()) {
-                Logger.logAction("Test Suite --> " + suite);
-
-                //get fail tests and time duration
-                for (int i = 0; i < failTests.get(suite).size(); i++) {
-                    testName = failTests.get(suite).get(i).get("test_name").toString();
-                    testExecutionTime = failTests.get(suite).get(i).get("time").toString();
-                    Logger.logAction(String.format("%d) %s      -        %s", i+1, testName, testExecutionTime));
-                }
+            if (result.toString().toLowerCase().contains("blocked")) {
+                Logger.logComment("Note - Blocked tests did not execute and hence should not have any duration");
             }
         } else {
-            Logger.logWarning(String.format("There are no FAIL tests in json file %s", JsonReader.getTestSuiteFilename()));
+            Logger.logWarning(String.format("There are no %s tests in json file %s", result.toString().toUpperCase(), JsonReader.getTestSuiteFilename()));
         }
     }
 
-    /**
-     * Prints Blocked Test details (test name and duration)
-     * @throws Exception
-     */
-    private static void printAllBlockedTestDetails() throws Exception {
-        HashMap<String, List<JSONObject>> failTests = JsonReader.getAllTestsBlocked();
-
-        String testName;
-        String testExecutionTime;
-
-        //Check if any suite with blocked tests available
-        if (!failTests.keySet().isEmpty()) {
-            Logger.logOutput("BLOCKED list --> Total number of tests that blocked and their details");
-
-            //for each suite
-            for (String suite : failTests.keySet()) {
-                Logger.logAction("Test Suite --> " + suite);
-
-                //get fail tests and time duration
-                for (int i = 0; i < failTests.get(suite).size(); i++) {
-                    testName = failTests.get(suite).get(i).get("test_name").toString();
-                    testExecutionTime = failTests.get(suite).get(i).get("time").toString();
-                    Logger.logAction(String.format("%d) %s      -        %s", i+1, testName, testExecutionTime));
-                }
-            }
-            Logger.logComment(" Note - Blocked tests did not execute and hence should not have any duration");
-        } else {
-            Logger.logWarning(String.format("There are no FAIL tests in json file %s", JsonReader.getTestSuiteFilename()));
-        }
-    }
 
     /**
      * Prints Blocked Test details (test name and duration)

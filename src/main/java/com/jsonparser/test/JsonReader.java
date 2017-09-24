@@ -65,7 +65,7 @@ public class JsonReader {
      * @throws Exception
      */
     public static JSONArray getTestSuites() throws Exception {
-        JSONArray testSuites = (JSONArray) testSuiteJson.get("test_suites");
+        JSONArray testSuites = (JSONArray) getTestSuiteJsonObject().get("test_suites");
         return testSuites;
     }
 
@@ -114,28 +114,9 @@ public class JsonReader {
      * @return - HashMap of suite name and list of JSONObject's of pass tests
      * @throws Exception
      */
-    public static HashMap<String, List<JSONObject>> getAllTestsPassed() throws Exception {
-        return getSortedTestResultsHashMap("pass");
+    public static HashMap<String, List<JSONObject>> getAllTests(Result desiredResult) throws Exception {
+        return getSortedTestResultsHashMap(desiredResult);
     }
-
-    /**
-     * To get all tests that failed
-     * @return HashMap of suite name and list of JSONObject's of failed tests
-     * @throws Exception
-     */
-    public static HashMap<String, List<JSONObject>> getAllTestsFailed() throws Exception {
-        return getSortedTestResultsHashMap("fail");
-    }
-
-    /**
-     * To get all tests that failed
-     * @return HashMap of suite name and list of JSONObject's of blocked tests
-     * @throws Exception
-     */
-    public static HashMap<String, List<JSONObject>> getAllTestsBlocked() throws Exception {
-        return getSortedTestResultsHashMap("blocked");
-    }
-
 
     /**
      * To get all tests greater than specified duration
@@ -202,11 +183,11 @@ public class JsonReader {
 
     /**
      * Helper method to get HashMap of suite name and list of JSONObjects based on test results.
-     * @param result - pass / fail / blocked
+     * @param desiredResult - enum for Result - pass / fail / blocked
      * @return HashMap of suite name and list of JSONObject's
      * @throws Exception
      */
-    private static HashMap<String, List<JSONObject>> getSortedTestResultsHashMap(String result) throws Exception {
+    private static HashMap<String, List<JSONObject>> getSortedTestResultsHashMap(Result desiredResult) throws Exception {
 
         JSONArray testSuites = getTestSuites();
         JSONObject json ;
@@ -232,7 +213,7 @@ public class JsonReader {
                 //System.out.println("Debug - singleTest: " + singleTest);
 
                 //Capture tests based on results
-                if (singleTest.get("status").equals(result)) {
+                if (singleTest.get("status").equals(desiredResult.toString())) {
                     passList.add((JSONObject) jsonResults.get(j));
                     passListMap.put(json.get("suite_name").toString(), passList);
                 }
@@ -321,6 +302,22 @@ public class JsonReader {
         public String toString() {
             return operator;
         }
+    }
+
+    /**
+     * Enum for results of test case
+     */
+    public enum Result {
+        PASS ("pass"),
+        FAIL ("fail"),
+        BLOCKED ("blocked");
+
+        private String result;
+
+        Result(String result) { this.result = result; }
+
+        @Override
+        public String toString() { return result; }
     }
 
 }
