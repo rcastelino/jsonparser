@@ -1,6 +1,5 @@
 package com.jsonparser.test;
 
-import com.oracle.javafx.jmx.json.JSONException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -243,7 +242,7 @@ public class JsonReader {
                 try {
                     value1 = (String) obj1.get("test_name");
                     value2 = (String) obj2.get("test_name");
-                } catch (JSONException exp) {
+                } catch (Exception exp) {
                     Logger.logComment(String.format("Caught an Exception while trying to sort in ascending order : %s", exp.getMessage()));
                 }
                 return value1.compareTo(value2);
